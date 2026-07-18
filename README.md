@@ -1,3 +1,6 @@
+# Foreign-exchange-currency-converter_DRJY
+Practica de frontendmentor : Foreign exchange currency converter
+
 # Frontend Mentor - FX Checker
 
 ![Design preview for the FX Checker coding challenge](./preview.jpg)
