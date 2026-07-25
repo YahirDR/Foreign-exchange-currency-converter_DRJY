@@ -2,3 +2,44 @@ body{
     background-color: #000000;
     color: #ffffff;
 }
+
+.liveMarket {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    overflow: hidden;
+}
+
+.ticker {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+}
+
+/* Contenedor de los items */
+.tickerTrack {
+    display: inline-flex;
+    gap: 40px;
+    animation: ticker 100s linear infinite; 
+}
+
+/* Pausar al pasar el mouse */
+.tickerTrack:hover {
+    animation-play-state: paused;
+}
+
+/* Estilo de cada par */
+.tickerItem {
+    white-space: nowrap;
+    font-size: 0.9rem;
+}
+
+/* ========== ANIMACIÓN ========== */
+@keyframes ticker {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%); /* Se mueve la mitad porque duplicamos el contenido */
+    }
+}
