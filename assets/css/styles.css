@@ -30,11 +30,27 @@ body{
 
 /* Estilo de cada par */
 .tickerItem {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     white-space: nowrap;
-    font-size: 0.9rem;
+}
+.tickerItem .pair {
+    font-weight: 500;
 }
 
-/* ========== ANIMACIÓN ========== */
+.tickerItem .rate {
+    font-variant-numeric: tabular-nums;
+}
+
+.tickerItem .change.up {
+    color: #00c853; 
+}
+
+.tickerItem .change.down {
+    color: #ff1744; 
+}
+/* ========== ANIMACIÓN DE SCROLL ========== */
 @keyframes ticker {
     from {
         transform: translateX(0);

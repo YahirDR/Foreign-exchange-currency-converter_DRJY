@@ -26,29 +26,61 @@ const PAIRS = [
     ["USD", "CNY"],   // Yuan chino (opcional)
 ];
 
-/* Obtener los ultimos tipos de cambio de divisas*/
-/* https://api.frankfurter.dev/v2/rates  */
-
 /**
- * Obtiene la tasa de un par específico
+ * Obtiene la tasa de un par en una fecha concreta (o la más reciente si no se pasa fecha)
  */
-async function getRate(base, quote) {
-    const response = await fetch(`${api}/rate/${base}/${quote}`);
+async function getRate(base, quote, date = null) {
+    let url = `${api}/rate/${base}/${quote}`;
+    if (date) url += `?date=${date}`;
+
+    const response = await fetch(url);
     if (!response.ok) return null;
     return response.json();
 }
+
 /**
- * Obtiene varios pares de divisas y sus tasas
+ * Devuelve la fecha de ayer en formato YYYY-MM-DD
+ */
+function getYesterday() {
+    const date = new Date();
+    date.setDate(date.getDate() - 1);
+    return date.toISOString().split("T")[0];
+}
+
+/**
+ * Obtiene los pares con su cambio de 24h
  */
 async function getTickerRates() {
-    const promises = PAIRS.map(([base, quote]) => getRate(base, quote));
-    const results = await Promise.all(promises);
+    const yesterday = getYesterday();
 
-    // Filtramos los que fallaron
+    const promises = PAIRS.map(async ([base, quote]) => {
+    const [today, previous] = await Promise.all([
+        getRate(base, quote),
+        getRate(base, quote, yesterday)
+    ]);
+
+    if (!today) return null;
+
+    // Calculamos el cambio porcentual
+    let change = 0;
+    if (previous && previous.rate) {
+        change = ((today.rate - previous.rate) / previous.rate) * 100;
+    }
+
+    return {
+        base: today.base,
+        quote: today.quote,
+        rate: today.rate,
+        change: change
+    };
+    });
+
+    const results = await Promise.all(promises);
     return results.filter(item => item !== null);
 }
+
 /**
- * Muestra el ticker
+ * Muestra el ticker con flechas
  */
 async function mostrarTicker() {
     try {
@@ -60,20 +92,26 @@ async function mostrarTicker() {
         const span = document.createElement("span");
         span.classList.add("tickerItem");
 
-        // Formato: USD/JPY 157.91
-        span.textContent = `${item.base}/${item.quote} ${item.rate.toFixed(4)}`;
+        const isPositive = item.change >= 0;
+        const arrow = isPositive ? "▲" : "▼";
+        const changeClass = isPositive ? "up" : "down";
+        const changeText = `${arrow} ${Math.abs(item.change).toFixed(2)}%`;
+
+        span.innerHTML = `
+        <span class="pair">${item.base}/${item.quote}</span>
+        <span class="rate">${item.rate.toFixed(4)}</span>
+        <span class="change ${changeClass}">${changeText}</span>
+        `;
 
         tickerTrack.appendChild(span);
     });
 
-
+    // Duplicamos para la animación continua
+    tickerTrack.innerHTML += tickerTrack.innerHTML;
 
     } catch (error) {
         console.error(error);
     }
 }
 
-mostrarTicker();
-
-// Llamamos la función cuando cargue la página
 mostrarTicker();
