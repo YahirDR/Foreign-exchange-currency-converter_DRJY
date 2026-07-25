@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
-
+  <!-- CONEXION A CSS -->
+  <link rel="stylesheet" href="assets/css/styles.css">
   <title>Frontend Mentor | FX Checker</title>
 </head>
 <body>
@@ -26,17 +27,27 @@
 
 
 <!-- Header -->
-
+<header>
 <!-- Brand logo — assets/images/logo.svg (the lockup already includes the "FX_CHECKER" wordmark; use alt="FX Checker") -->
-
+  <img src="./assets/images/logo.svg" alt="FX Checker">
 <!-- Dynamic: number of available currencies, e.g. "55" -->
-Currencies · EOD · ECB data
+  Currencies · EOD · ECB data
+</header>
+
+
 
 
 <!-- Live markets ticker — auto-scrolls across the page, pauses on hover -->
 
-Live markets
 
+<nav class="liveMarket">
+  <span class="liveMarketTitle">Live markets</span>
+  <div class="ticker">
+      <div class="tickerTrack" id="tickerTrack">
+          <!-- JavaScript agregará aquí los pares -->
+      </div>
+  </div>
+</nav>
 <!-- Dynamic: scrolling list of currency pairs, each with its rate and 24h change (▲ up / ▼ down) -->
 
 
@@ -152,4 +163,5 @@ No conversions logged yet
 Every conversion is recorded here automatically when you tap Log conversion. Your log is private to this session and this browser.
 
 </body>
+<script src="assets/js/script.js"></script>
 </html>
